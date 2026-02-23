@@ -11,7 +11,7 @@ public class Timetable {
 
     public void addNewTrainingSession(TrainingSession trainingSession) {
         //сохраняем занятие в расписании
-        if (trainingSession == null){
+        if (trainingSession == null) {
             return;
         }
 
@@ -20,7 +20,7 @@ public class Timetable {
 
         TreeMap<TimeOfDay, ArrayList<TrainingSession>> timeOfDayTable = timetable.getOrDefault(dayOfWeek, new TreeMap<>());
         ArrayList<TrainingSession> trainingSessionList = timeOfDayTable.getOrDefault(timeOfDay, new ArrayList<>());
-        if (!trainingSessionList.contains(trainingSession)){
+        if (!trainingSessionList.contains(trainingSession)) {
             trainingSessionList.add(trainingSession);
         }
         timeOfDayTable.put(timeOfDay, trainingSessionList);
@@ -37,16 +37,16 @@ public class Timetable {
 
     public ArrayList<TrainingSession> getTrainingSessionsForDayAndTime(DayOfWeek dayOfWeek, TimeOfDay timeOfDay) {
         //как реализовать, тоже непонятно, но сложность должна быть O(log(n))
-        if (timetable.get(dayOfWeek) == null){
+        if (timetable.get(dayOfWeek) == null) {
             return null;
         }
         return timetable.get(dayOfWeek).get(timeOfDay);
     }
 
-    public ArrayList<CounterOfTrainings> getCountByCoaches(){
+    public ArrayList<CounterOfTrainings> getCountByCoaches() {
         ArrayList<CounterOfTrainings> coachWorkCounterList = new ArrayList<>();
 
-        for (Map.Entry<Coach, Integer> entry : coachWorkCounter.entrySet()){
+        for (Map.Entry<Coach, Integer> entry : coachWorkCounter.entrySet()) {
             coachWorkCounterList.add(new CounterOfTrainings(entry.getKey(), entry.getValue()));
         }
 
@@ -55,11 +55,11 @@ public class Timetable {
         return coachWorkCounterList;
     }
 
-    private Comparator<CounterOfTrainings> getComparatorCoachWorkCounter(){
+    private Comparator<CounterOfTrainings> getComparatorCoachWorkCounter() {
         return new Comparator<>() {
             @Override
             public int compare(CounterOfTrainings counter1, CounterOfTrainings counter2) {
-                return - ( counter1.getCount() - counter2.getCount() );
+                return - (counter1.getCount() - counter2.getCount());
             }
         };
     }
