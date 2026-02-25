@@ -2,7 +2,7 @@ package ru.yandex.practicum.gym;
 
 import java.util.Objects;
 
-public class CounterOfTrainings {
+public class CounterOfTrainings implements Comparable<CounterOfTrainings>{
     private final Coach coach;
     private int count;
 
@@ -34,5 +34,10 @@ public class CounterOfTrainings {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    @Override
+    public int compareTo(CounterOfTrainings o) {
+        return - (this.getCount() - o.getCount());
     }
 }

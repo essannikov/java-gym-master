@@ -15,8 +15,8 @@ public class TimetableTest {
         Timetable timetable = new Timetable();
 
         TimeOfDay timeOfDay1300 = new TimeOfDay(13, 0);
-        Group group = new Group("Акробатика для детей", Age.CHILD, 60);
         Coach coach = new Coach("Васильев", "Николай", "Сергеевич");
+        Group group = new Group("Акробатика для детей", Age.CHILD, 60);
 
         TrainingSession singleTrainingSession = new TrainingSession(group, coach,
                 DayOfWeek.MONDAY, timeOfDay1300);
@@ -28,7 +28,7 @@ public class TimetableTest {
         assertEquals(1, timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, timeOfDay1300).size());
 
         //Проверить, что за вторник не вернулось занятий
-        assertNull(timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY));
+        assertEquals(0, timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY).size());
     }
 
     @Test
@@ -62,8 +62,7 @@ public class TimetableTest {
         assertEquals(1, timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, timeOfDay1300).size());
 
         // Проверить, что за четверг вернулось два занятия в правильном порядке: сначала в 13:00, потом в 20:00
-        TreeMap<TimeOfDay, ArrayList<TrainingSession>> thursdayTrainings = timetable.getTrainingSessionsForDay(DayOfWeek.THURSDAY);
-        assertNotNull(thursdayTrainings);
+        TreeMap<TimeOfDay, List<TrainingSession>> thursdayTrainings = (TreeMap<TimeOfDay, List<TrainingSession>>) timetable.getTrainingSessionsForDay(DayOfWeek.THURSDAY);
         assertEquals(2, thursdayTrainings.size());
 
         int i = 0;
@@ -80,7 +79,7 @@ public class TimetableTest {
         }
 
         // Проверить, что за вторник не вернулось занятий
-        assertNull(timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY));
+        assertEquals(0, timetable.getTrainingSessionsForDay(DayOfWeek.TUESDAY).size());
     }
 
     @Test
@@ -89,18 +88,29 @@ public class TimetableTest {
 
         TimeOfDay timeOfDay1300 = new TimeOfDay(13, 0);
         TimeOfDay timeOfDay1400 = new TimeOfDay(14, 0);
-        Group group = new Group("Акробатика для детей", Age.CHILD, 60);
-        Coach coach = new Coach("Васильев", "Николай", "Сергеевич");
+        TimeOfDay timeOfDay2000 = new TimeOfDay(20, 0);
+        Coach coach1 = new Coach("Васильев", "Николай", "Сергеевич");
+        Coach coach2 = new Coach("Иванов", "Иван", "Иванович");
+        Group groupAdult = new Group("Акробатика для взрослых", Age.ADULT, 90);
+        Group groupChild = new Group("Акробатика для детей", Age.CHILD, 60);
 
-        TrainingSession singleTrainingSession = new TrainingSession(group, coach,
-                DayOfWeek.MONDAY, timeOfDay1300);
-        timetable.addNewTrainingSession(singleTrainingSession);
+        timetable.addNewTrainingSession(new TrainingSession(groupChild, coach1,
+                DayOfWeek.MONDAY, timeOfDay1300));
+
+        timetable.addNewTrainingSession(new TrainingSession(groupChild, coach1,
+                DayOfWeek.MONDAY, timeOfDay2000));
+        timetable.addNewTrainingSession(new TrainingSession(groupAdult, coach2,
+                DayOfWeek.MONDAY, timeOfDay2000));
+
 
         //Проверить, что за понедельник в 13:00 вернулось одно занятие
         assertEquals(1, timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, timeOfDay1300).size());
 
         //Проверить, что за понедельник в 14:00 не вернулось занятий
-        assertNull(timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, timeOfDay1400));
+        assertEquals(0, timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, timeOfDay1400).size());
+
+        //Проверить, что за понедельник в 20:00 вернулось два занятия
+        assertEquals(2, timetable.getTrainingSessionsForDayAndTime(DayOfWeek.MONDAY, timeOfDay2000).size());
     }
 
     @Test
@@ -131,7 +141,7 @@ public class TimetableTest {
 
 
         //Проверка
-        ArrayList<CounterOfTrainings> coachWorkCounterList = timetable.getCountByCoaches();
+        List<CounterOfTrainings> coachWorkCounterList = timetable.getCountByCoaches();
         assertNotNull(coachWorkCounterList);
         assertEquals(3, coachWorkCounterList.get(0).getCount());
         assertEquals(1, coachWorkCounterList.get(1).getCount());
